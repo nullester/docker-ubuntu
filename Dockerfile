@@ -2,13 +2,16 @@
 
 ARG UID=1000
 ARG GID=1000
+ARG MAINTAINER="nullester"
 
 FROM ubuntu as builder
 
 ARG UID
 ARG GID
+ARG MAINTAINER
 
-LABEL maintainer="nullester"
+RUN echo "Maintainer is \033[032m${MAINTAINER}\033[0m"
+LABEL maintainer="${MAINTAINER}"
 
 ENV LC_ALL="C.UTF-8" \
     LANG="C.UTF-8" \
