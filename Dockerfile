@@ -82,10 +82,10 @@ RUN usermod -a -G sudo docker
 RUN chown -R docker:docker /home/docker
 RUN usermod -d /root root
 RUN usermod -d /home/docker docker
-ENV HOME="/root"
 USER docker
 ENV HOME="/home/docker"
 USER root
+ENV HOME="/root"
 RUN echo "docker:secret" > /tmp/passwd.txt && chpasswd < /tmp/passwd.txt && shred -n 3 /tmp/passwd.txt && rm /tmp/passwd.txt
 RUN echo '%docker ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
