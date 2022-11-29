@@ -75,11 +75,17 @@ ENV LC_ALL="en_US.UTF-8" \
 
 # User stuff
 FROM build2 as build3
+USER root
 RUN groupadd -g ${GID:-1000} -o docker
-RUN useradd -m -u ${UID:-1000} -g docker -G sudo -s /bin/bash docker
+RUN useradd -m -u ${UID:-1000} -g docker -s /bin/bash docker
+RUN usermod -a -G sudo docker
 RUN chown -R docker:docker /home/docker
 RUN usermod -d /root root
 RUN usermod -d /home/docker docker
+ENV HOME="/root"
+USER docker
+ENV HOME="/home/docker"
+USER root
 RUN echo "docker:secret" > /tmp/passwd.txt && chpasswd < /tmp/passwd.txt && shred -n 3 /tmp/passwd.txt && rm /tmp/passwd.txt
 RUN echo '%docker ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
