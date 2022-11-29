@@ -58,7 +58,6 @@ RUN set -e; apt-get install -y \
     autoconf \
     libc-dev \
     pkg-config \
-    fortunes-debian-hints \
     systemd
 
 # Locales
