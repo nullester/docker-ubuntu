@@ -86,6 +86,8 @@ USER docker
 ENV HOME="/home/docker"
 USER root
 ENV HOME="/root"
+RUN su root -c "export HOME=/root"
+RUN su docker -c "export HOME=/home/docker"
 RUN echo "docker:secret" > /tmp/passwd.txt && chpasswd < /tmp/passwd.txt && shred -n 3 /tmp/passwd.txt && rm /tmp/passwd.txt
 RUN echo '%docker ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
