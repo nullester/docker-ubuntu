@@ -79,16 +79,13 @@ USER root
 RUN groupadd -g ${GID:-1000} -o docker
 RUN useradd -m -u ${UID:-1000} -g docker -s /bin/bash docker
 RUN usermod -a -G sudo docker
+RUN mkdir /home/docker/.ssh
 RUN chown -R docker:docker /home/docker
 RUN usermod -d /root root
 RUN usermod -d /home/docker docker
-USER docker
-ENV HOME="/home/docker"
-USER root
-ENV HOME="/root"
-RUN su root -c "export HOME=/root"
-RUN su docker -c "export HOME=/home/docker"
-RUN echo "docker:secret" > /tmp/passwd.txt && chpasswd < /tmp/passwd.txt && shred -n 3 /tmp/passwd.txt && rm /tmp/passwd.txt
+RUN su root -c "export HOME=/root && echo 'export HOME=/root' >> /root/.bashrc"
+RUN su docker -c "export HOME=/home/docker && echo 'export HOME=/home/docker' >> /home/docker/.bashrc"
+RUN echo "root:secret" > /tmp/passwd.txt && echo "docker:secret" >> /tmp/passwd.txt && chpasswd < /tmp/passwd.txt && shred -n 3 /tmp/passwd.txt && rm /tmp/passwd.txt
 RUN echo '%docker ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
 # Prepare entrypoint
