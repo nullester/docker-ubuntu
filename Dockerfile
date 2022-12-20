@@ -41,6 +41,7 @@ RUN set -e; apt-get install -y \
     libxml2-dev \
     iputils-ping \
     sudo \
+    tree \
     ssh \
     git \
     net-tools \
