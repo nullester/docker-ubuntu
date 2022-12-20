@@ -42,6 +42,7 @@ RUN set -e; apt-get install -y \
     iputils-ping \
     sudo \
     tree \
+    openssl \
     ssh \
     git \
     net-tools \
@@ -74,8 +75,14 @@ RUN locale-gen
 ENV LC_ALL="en_US.UTF-8" \
     LANG="en_US.UTF-8"
 
-# User stuff
+# OpenSSL
 FROM build2 as build3
+RUN sed -Ezi 's/\[\ *default_sect\ *\]\n\#\ ?/\[default_sect\]\n/' /etc/ssl/openssl.cnf
+RUN sed -Ezi 's/\[\ *default_sect\ *\]/\[legacy_sect\]\nactive\ =\ 1\n\[default_sect\]/' /etc/ssl/openssl.cnf
+RUN sed -Ezi 's/\n\[\ *provider_sect\ *\]\n/\n\[provider_sect\]\nlegacy\ \=\ legacy_sect\n/' /etc/ssl/openssl.cnf
+
+# User stuff
+FROM build3 as build4
 USER root
 RUN groupadd -g ${GID:-1000} -o docker
 RUN useradd -m -u ${UID:-1000} -g docker -s /bin/bash docker
@@ -90,9 +97,9 @@ RUN echo "root:secret" > /tmp/passwd.txt && echo "docker:secret" >> /tmp/passwd.
 RUN echo '%docker ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
 # Prepare entrypoint
-FROM build3 as build4
+FROM build4 as build5
 COPY entrypoint.sh /entry/ubuntu
 RUN chmod +x /entry/ubuntu
 
-# FROM build4
+# FROM build5
 # ENTRYPOINT ["/entry/ubuntu"]
