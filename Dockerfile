@@ -78,7 +78,7 @@ ENV LC_ALL="en_US.UTF-8" \
 # OpenSSL
 FROM build2 as build3
 RUN sed -Ezi 's/\[\ *default_sect\ *\]\n\#\ ?/\[default_sect\]\n/' /etc/ssl/openssl.cnf
-RUN sed -Ezi 's/\[\ *default_sect\ *\]/\[legacy_sect\]\nactive\ =\ 1\n\[default_sect\]/' /etc/ssl/openssl.cnf
+RUN sed -Ezi 's/\[\ *default_sect\ *\]/\[legacy_sect\]\nactivate\ =\ 1\n\[default_sect\]/' /etc/ssl/openssl.cnf
 RUN sed -Ezi 's/\n\[\ *provider_sect\ *\]\n/\n\[provider_sect\]\nlegacy\ \=\ legacy_sect\n/' /etc/ssl/openssl.cnf
 
 # User stuff
